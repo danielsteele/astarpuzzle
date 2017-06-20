@@ -1,0 +1,103 @@
+html, body {
+    height: 100%;
+    padding: 35px;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+#mainheader {
+    color: #061825;
+    font-weight: 700;
+    font-size: 50px;
+}
+
+.navbar {
+    font-size: 22px;
+}
+
+#instructions, #aboutcontent {
+    text-align: left;
+    font-size: 22px;
+}
+
+#aboutcontent li {
+    margin: 0 0 15px 0;
+}
+
+#instructions li {
+    margin: 0 0 50px 0;
+    color: #061825;
+    font-weight: 700;
+}
+
+#data {
+    width: 100%;
+    table-layout: fixed;
+    word-wrap: break-word;
+    text-align: left;
+    font-size: 22px;
+}
+
+.dataheading {
+    font-size: 22px;
+    background: #061825;
+    color: white;
+    padding: 7px;
+}
+
+.dataresult {
+    padding-bottom: 10px;
+}
+
+.btn-xlarge {
+    padding: 18px 28px;
+    font-size: 36px;
+    line-height: normal;
+    -webkit-border-radius: 8px;
+       -moz-border-radius: 8px;
+            border-radius: 8px;
+}
+
+.boardBtn {
+    width: 166px;
+    height: 166px;
+    font-size: 100px;
+}
+
+#solve, #shuffle {
+    background: #061825;
+}
+
+.content {
+    text-align: center;
+}
+
+.blankTile {
+    visibility: hidden;
+}
+
+.movable:hover {
+    color: gold;
+}
+
+#goback {
+    float: right;
+    font-size: 14px;
+}
+
+#gameTable>tbody>tr>td {
+    padding: 3px;
+}
+
+#jbt {
+    background-color: #061825;
+    color: white;
+}
+
+code p {
+    font-size: 14px;
+}
