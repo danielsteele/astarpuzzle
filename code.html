@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A* Algorithm Puzzle</title>
+    <link rel="stylesheet" type="text/css" href="astar.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="index.html" class="navbar-brand"><i class="fa fa-hashtag" aria-hidden="true"></i>Daniel Steele Project</a>
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About<span class="sr-only">(current)</span></a></li>
+                    <li><a href="code.html">Code</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+    <h1>Code Examples</h1>
+
+    <ul>
+        <li><a href="#boarddescription">Board Prototype</a></li>
+        <li><a href="#astardescription">A* Algorithm Implementation</a></li>
+    </ul>
+
+    <code style=display:block;white-space:pre-wrap>
+    <hr id="boarddescription">
+    <h2>Board Prototype</h2>
+
+        <p>
+        A puzzle board can be thought of as an array of nine numbers (0 - 8), with the zero representing the blank tile. 
+
+        The goal state is the specific array [0,1,2,3,4,5,6,7,8]. So the task is to build a tree of Boards leading from
+        the starting state until the goal state is found.  The A* algorithm's purpose is to search that tree
+        intelligently.
+
+        The Board prototype contains the common properties - the goal state and methods - while each instance of a Board
+        contains its own current state and path properties.  The path property represents all of the moves that have led
+        up to that state. 
+
+        When a move is made, a new Board is generated from the parent board and a new element is pushed into its path
+        array.</p> 
+
+function Board() {
+    this.state = [];
+    this.path = [];
+}
+
+    Board.prototype = {
+        goalState: [0,1,2,3,4,5,6,7,8],
+
+        foundGoalState: function() {
+            for (let i = 0; i < this.goalState.length; i++) {
+                if (this.state[i] !== this.goalState[i]) {
+                    return false;
+                }
+            }
+            return true;
+        },
+
+        canMoveUp: function() {
+            return this.state.indexOf(0) > 2;
+        },
+
+        canMoveRight: function() {
+            const rightEdge = [2,5,8];
+            return !rightEdge.includes(this.state.indexOf(0)); 
+        },
+
+        canMoveDown: function() {
+            return this.state.indexOf(0) < 6;
+        },
+
+        canMoveLeft: function() {
+            const leftEdge = [0,3,6];
+            return !leftEdge.includes(this.state.indexOf(0));
+        },
+
+        moveUp: function() {
+            //return a new board, with the new path and state
+            var newBoard = new Board();
+            var newState = this.state.slice(0);
+            const zeroIndex = this.state.indexOf(0);
+            //store the value of the tile above the blank tile
+            const temp = this.state[zeroIndex-3];
+            //swap them
+            newState[zeroIndex-3] = 0;
+            newState[zeroIndex] = temp;
+
+            newBoard.state = newState;
+            newBoard.path = this.path.slice(0);
+            newBoard.path.push('U');
+
+            return newBoard;
+        },
+
+        moveRight: function() {
+            //return a new board, with the new path and state
+            var newBoard = new Board();
+            var newState = this.state.slice(0);
+            const zeroIndex = this.state.indexOf(0);
+            //store the value of the tile to the right of the blank tile
+            const temp = this.state[zeroIndex+1];
+            //swap them
+            newState[zeroIndex+1] = 0;
+            newState[zeroIndex] = temp;
+
+            newBoard.state = newState;
+            newBoard.path = this.path.slice(0);
+            newBoard.path.push('R');
+
+            return newBoard;
+        },
+
+        moveDown: function() {
+            //return a new board, with the new path and state
+            var newBoard = new Board();
+            var newState = this.state.slice(0);
+            const zeroIndex = this.state.indexOf(0);
+            //store the value of the tile below the blank tile
+            const temp = this.state[zeroIndex+3];
+            //swap them
+            newState[zeroIndex+3] = 0;
+            newState[zeroIndex] = temp;
+
+            newBoard.state = newState;
+            newBoard.path = this.path.slice(0);
+            newBoard.path.push('D');
+
+            return newBoard;
+        },
+
+        moveLeft: function() {
+            //return a new board, with the new path and state
+            var newBoard = new Board();
+            var newState = this.state.slice(0);
+            const zeroIndex = this.state.indexOf(0);
+            //store the value of the tile to the left of the blank tile
+            const temp = this.state[zeroIndex-1];
+            //swap them
+            newState[zeroIndex-1] = 0;
+            newState[zeroIndex] = temp;
+
+            newBoard.state = newState;
+            newBoard.path = this.path.slice(0);
+            newBoard.path.push('L');
+
+            return newBoard;
+        },
+
+        getGCost: function() {
+            //g-cost represents the cost to get to this state
+            return this.path.length;
+        },
+
+        getHCost: function() {
+            //return the sum of the manhattan distances for all tiles excluding zero
+            //the m.distance is 1 for a tile that is 1 move from its home, 2 for 2 moves etc
+            //the h-cost is used to compute the f-cost and guide the search
+            //the queue is implemented as a priority queue ordered by the f-cost
+            //in this way the algorithm investigates likely choices first
+            var manhattanDistance = 0;
+            var horizontalDistance;
+            var verticalDistance;
+            var goalRow;
+            var currentRow;
+            for (let i = 0; i < this.state.length; i++) {
+                //skip the zero tile
+                if(this.state[i] === 0) { continue; }
+                
+                //compute horizontal distance
+                horizontalDistance = Math.abs(i%3 - this.state[i]%3);
+                
+                //compute vertical distance
+                i < 3 ? goalRow = 0 : 
+                i < 6 ? goalRow = 1 : 
+                        goalRow = 2;
+
+                this.state[i] < 3 ? currentRow = 0 :
+                this.state[i] < 6 ? currentRow = 1 :
+                                    currentRow = 2;
+
+                verticalDistance = Math.abs(goalRow - currentRow); 
+                
+                //add the sum to the manhattanDistance total
+                manhattanDistance += (horizontalDistance + verticalDistance);
+            }
+
+            return manhattanDistance;
+        },
+
+        getFCost: function() {
+            //the f-cost is the heuristic estimate + the pathlength to this point
+            return this.getGCost() + this.getHCost();
+        }
+    }
+
+    <hr id="astardescription">
+    <h2>A* Algorithm Implementation</h2>
+
+    <p>
+        The A* algorithm uses a heuristic value to guide its search for the goal state.
+
+        A heuristic is an estimate of how far a candidate state is from the goal state.
+
+        The heuristic estimate used here is the Manhattan Distance. The Manhattan Distance is a value given to each tile
+        on a Board. If the tile is in its correct position corresponding to the goal state then its Manhattan Distance
+        is 0. If it is one move away then the value is 1, and so on.  The sum of the Manhattan Distances gives a good
+        estimate of how far away a given state is from the goal state.
+
+        This value is combined with the current path length of the state - the cost to get to that point - into a value
+        called the f-cost.
+
+        In this implementation the f-costs of all candidate Boards are stored in a min-heap to allow for constant-time
+        access to the lowest existent value. The Boards are stored in an object with the f-costs as the keys. Each key
+        may contain one, several or many Boards, so the value is an array of Boards.
+
+        The algorithm loop takes the Board with the lowest f-cost and if it is the goal state then it returns that
+        state's path, else it expands that state by moving the blank tile up, right, down, or left depending on which
+        moves are valid. A list of already-expanded states is kept to ensure that the same state is not visited more than
+        once.  The new states are added to the heap and the process continues until the solution is found.
+    </p>
+function astar() {
+    //return a solution to the puzzle
+    var current,
+        tempBoard,
+        topVal,
+        heap = new BinaryHeap(function(x){return x;}),
+        queueMap = {},
+        expandedList = {},
+        initialBoard = createInitialBoard();
+
+    //add the initialBoard's fcost to the heap
+    heap.push(initialBoard.getFCost());
+
+    //add the initialBoard to the queue
+    queueMap[initialBoard.getFCost()] = [];
+    queueMap[initialBoard.getFCost()].push(initialBoard);
+
+    return findSolution();
+
+    function findSolution() {
+        //main algorithm loop
+        
+        while (heap.size() > 0) {
+            //get the next value from the root of the heap
+            topVal = heap.pop();
+            //get the next board from the queue with that f-cost
+            current = queueMap[topVal].pop();
+
+            //test for the goal state
+            if (current.foundGoalState()) {
+                return current.path;
+            }
+
+            //no goal state found, expand the current state
+            //move up
+            if (current.canMoveUp()) {
+                tempBoard = current.moveUp();
+                updateHeapAndQueue(tempBoard);
+            }
+
+            //move right
+            if (current.canMoveRight()) {
+                tempBoard = current.moveRight();
+                updateHeapAndQueue(tempBoard);
+            }
+
+            //move down
+            if (current.canMoveDown()) {
+                tempBoard = current.moveDown();
+                updateHeapAndQueue(tempBoard);
+            }
+
+            //move left
+            if (current.canMoveLeft()) {
+                tempBoard = current.moveLeft();
+                updateHeapAndQueue(tempBoard);
+            }
+        }
+    }
+    
+    function updateHeapAndQueue(newBoard) {
+        //if the new board does not exist in the expanded List
+        //  add its fcost to the heap
+        //  add the board to the queue
+        if (!expandedList[newBoard.state]) {
+            heap.push(newBoard.getFCost());
+            if (!queueMap[newBoard.getFCost()]) {
+                queueMap[newBoard.getFCost()] = [];
+            }
+            queueMap[newBoard.getFCost()].push(newBoard);
+
+        }
+    }
+
+    function getInitialBoardValues() {
+        var buttons = $(".boardBtn");
+        let initialBoardValues = [];
+
+        for (let i = 0; i < 9; i++) {
+            initialBoardValues.push(Number(buttons[i].textContent));
+        }
+
+        return initialBoardValues;
+    }
+
+    function createInitialBoard() {
+        var initialBoard = new Board();
+        initialBoard.state = getInitialBoardValues();
+        initialBoard.path = [];
+        return initialBoard;
+    }
+}
+
+    </code>
+
+    </div>
+
+</body>
+</html>
