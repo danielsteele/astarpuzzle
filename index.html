@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>A* Algorithm Puzzle</title>
+    <link rel="stylesheet" type="text/css" href="astar.css">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+
+</head>
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a href="index.html" class="navbar-brand"><i class="fa fa-hashtag" aria-hidden="true"></i>Daniel Steele Project</a>
+                <ul class="nav navbar-nav">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="about.html">About<span class="sr-only">(current)</span></a></li>
+                    <li><a href="code.html">Code</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+<div class="container content">   
+    <div class="page-header">
+        <h1 id="mainheader">Sliding Tile Puzzle</h1> 
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            <ul id="instructions">
+                <li>Click the tiles to move them</li>
+                <li>Click "Shuffle" to get a random solvable puzzle</li>
+                <li>Click "Solve" to get an optimal solution</li>
+            </ul>
+        </div>
+        <div class="col-md-6">
+            <table id="gameTable">
+        <tr>
+            <td><button class="boardBtn btn-xlarge btn-success">1</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">4</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">2</button></td>
+        </tr>
+        <tr>
+            <td><button class="boardBtn btn-xlarge btn-success">5</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">0</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">7</button></td>
+        </tr>
+        <tr>
+            <td><button class="boardBtn btn-xlarge btn-success">3</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">8</button></td>
+            <td><button class="boardBtn btn-xlarge btn-success">6</button></td>
+        </tr>
+    </table>
+
+    <hr>
+    <button id="shuffle" class="btn-xlarge btn-primary">Shuffle</button>
+    <button id="solve" class="btn-xlarge btn-primary">Solve</button>
+        </div>
+        <div class="col-md-3">
+            
+            <table class="table-striped" id="data">
+                <tr>
+                    <td class="dataheading">Runtime</td>
+                </tr>
+                <tr>
+                    <td id="runtime" class="dataresult">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="dataheading">Solution</td>
+                </tr>
+                <tr>
+                    <td id="solution" class="dataresult">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="dataheading">Start Position <button class="btn btn-sm btn-success" id="goback" hidden>Go Back</button></td>
+                </tr>
+                <tr>
+                    <td id="startpos" class="dataresult">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="dataheading">Total Moves</td>
+                </tr>
+                <tr>
+                    <td id="totalmoves" class="dataresult">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="dataheading">Moves Investigated</td>
+                </tr>
+                <tr>
+                    <td id="investigated" class="dataresult">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td class="dataheading">Max Queue Length</td>
+                </tr>
+                <tr>
+                    <td id="maxqueue" class="dataresult">&nbsp;</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    
+</div>
+<script
+    src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"> 
+</script>
+<script type="text/javascript" src="board.js"></script>
+</body>
+</html>
