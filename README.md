@@ -1,15 +1,15 @@
 # astarpuzzle
 The A* search algorithm is used to solve a sliding tile puzzle.
 
-Program Author
+Program Author:  
     Daniel Steele
 
-Program Description
+Program Description:  
     The user is presented with a sliding tile puzzle.
     The user can move the tiles on the puzzle.
     The A* algorithm is used to solve the puzzle.
 
-Contents
+Contents:  
     1. Board Prototype
     2. Heap Prototype
     3. Event Listeners
@@ -17,5 +17,5 @@ Contents
     5. Animate Solution Function
     6. A* Algorithm
     
-Use
+Use:  
     To view the project open the index.html file in a browser.
